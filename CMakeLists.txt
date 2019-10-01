@@ -376,7 +376,7 @@ if (NOT DISABLE_FORCE_DEBUG_POSTFIX)
 endif ()
 
 
-add_library(freetype
+add_library(Freetype
   ${PUBLIC_HEADERS}
   ${PUBLIC_CONFIG_HEADERS}
   ${PRIVATE_HEADERS}
@@ -384,30 +384,30 @@ add_library(freetype
 )
 
 set_target_properties(
-  freetype PROPERTIES
+        Freetype PROPERTIES
     C_VISIBILITY_PRESET hidden)
 
 target_compile_definitions(
-  freetype PRIVATE FT2_BUILD_LIBRARY)
+        Freetype PRIVATE FT2_BUILD_LIBRARY)
 
 if (WIN32)
   target_compile_definitions(
-    freetype PRIVATE _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_WARNINGS)
+          Freetype PRIVATE _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_WARNINGS)
   if (BUILD_SHARED_LIBS)
     target_compile_definitions(
-      freetype PRIVATE DLL_EXPORT)
+            Freetype PRIVATE DLL_EXPORT)
   endif ()
 endif ()
 
 if (BUILD_SHARED_LIBS)
-  set_target_properties(freetype PROPERTIES
+  set_target_properties(Freetype PROPERTIES
     VERSION ${LIBRARY_VERSION}
     SOVERSION ${LIBRARY_SOVERSION})
 endif ()
 
 # Pick up ftconfig.h and ftoption.h generated above, first.
 target_include_directories(
-  freetype
+  Freetype
     PUBLIC
       $<INSTALL_INTERFACE:include/freetype2>
       $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
@@ -421,7 +421,7 @@ if (BUILD_FRAMEWORK)
   set_property(SOURCE ${PUBLIC_CONFIG_HEADERS}
     PROPERTY MACOSX_PACKAGE_LOCATION Headers/config
   )
-  set_target_properties(freetype PROPERTIES
+  set_target_properties(Freetype PROPERTIES
     FRAMEWORK TRUE
     MACOSX_FRAMEWORK_INFO_PLIST builds/mac/freetype-Info.plist
     PUBLIC_HEADER "${PUBLIC_HEADERS}"
@@ -429,34 +429,33 @@ if (BUILD_FRAMEWORK)
   )
 endif ()
 
-
 set(PKG_CONFIG_REQUIRED_PRIVATE "")
 
 if (ZLIB_FOUND)
-  target_link_libraries(freetype PRIVATE ${ZLIB_LIBRARIES})
-  target_include_directories(freetype PRIVATE ${ZLIB_INCLUDE_DIRS})
+  target_link_libraries(Freetype PRIVATE zlib)
+  target_include_directories(Freetype PRIVATE ${ZLIB_INCLUDE_DIRS})
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "zlib")
 endif ()
 if (BZIP2_FOUND)
-  target_link_libraries(freetype PRIVATE ${BZIP2_LIBRARIES})
-  target_include_directories(freetype PRIVATE ${BZIP2_INCLUDE_DIR}) # not BZIP2_INCLUDE_DIRS
+  target_link_libraries(Freetype PRIVATE ${BZIP2_LIBRARIES})
+  target_include_directories(Freetype PRIVATE ${BZIP2_INCLUDE_DIR}) # not BZIP2_INCLUDE_DIRS
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "bzip2")
 endif ()
 if (PNG_FOUND)
-  target_link_libraries(freetype PRIVATE ${PNG_LIBRARIES})
-  target_compile_definitions(freetype PRIVATE ${PNG_DEFINITIONS})
-  target_include_directories(freetype PRIVATE ${PNG_INCLUDE_DIRS})
+  target_link_libraries(Freetype PRIVATE ${PNG_LIBRARIES})
+  target_compile_definitions(Freetype PRIVATE ${PNG_DEFINITIONS})
+  target_include_directories(Freetype PRIVATE ${PNG_INCLUDE_DIRS})
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "libpng")
 endif ()
 if (HARFBUZZ_FOUND)
-  target_link_libraries(freetype PRIVATE ${HARFBUZZ_LIBRARIES})
-  target_include_directories(freetype PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
+  target_link_libraries(Freetype PRIVATE ${HARFBUZZ_LIBRARIES})
+  target_include_directories(Freetype PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "harfbuzz >= ${HARFBUZZ_MIN_VERSION}")
 endif ()
 if (BROTLIDEC_FOUND)
-  target_link_libraries(freetype PRIVATE ${BROTLIDEC_LIBRARIES})
-  target_compile_definitions(freetype PRIVATE ${BROTLIDEC_DEFINITIONS})
-  target_include_directories(freetype PRIVATE ${BROTLIDEC_INCLUDE_DIRS})
+  target_link_libraries(Freetype PRIVATE ${BROTLIDEC_LIBRARIES})
+  target_compile_definitions(Freetype PRIVATE ${BROTLIDEC_DEFINITIONS})
+  target_include_directories(Freetype PRIVATE ${BROTLIDEC_INCLUDE_DIRS})
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "libbrotlidec")
 endif ()
 
@@ -519,7 +518,7 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
   endif ()
 
   install(
-    TARGETS freetype
+    TARGETS Freetype
       EXPORT freetype-targets
       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -528,6 +527,7 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
       COMPONENT libraries)
   install(
     EXPORT freetype-targets
+      NAMESPACE Freetype::
       DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
       FILE freetype-config.cmake
       COMPONENT headers)
