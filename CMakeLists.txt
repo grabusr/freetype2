@@ -210,7 +210,7 @@ endif ()
 if (FT_WITH_ZLIB)
     find_package(ZLIB REQUIRED)
 else ()
-    find_package(ZLIB REQUIRED)
+    find_package(ZLIB)
 endif ()
 
 if (FT_WITH_BZIP2)
